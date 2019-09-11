@@ -59,4 +59,65 @@ axios.patch(url[, data[, config]])
 #### axios对比jQuery
 1. axios用法几乎是照抄jQuery，但是axios有更多的**请求方法（更多功能和API）**，jQuery只有get和post。
 2. 除了AJAX的功能更以外，就**没有其他功能了（更专注）**。比如jQuery还有操作DOM的方法等API。**但是操作DOM这块功能也被Vue代替了**，后面会讲到。
-#### AJAX的劫持
+#### 使用axios对AJAX的拦截器
+* 首先用jQuery的DOM操作和html建立一个简单的页面
+* 然后增加axios的**拦截器功能**
+```
+// 添加请求拦截器
+axios.interceptors.request.use(function (config) {
+    // 在发送请求之前做些什么
+    return config;
+  }, function (error) {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  });
+
+// 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+    // 对响应数据做点什么
+    return response;
+  }, function (error) {
+    // 对响应错误做点什么
+    return Promise.reject(error);
+  });
+```
+* 这里的单词interceptor就是拦截器的意思。不过这里是复数。
+* main.js增加代码
+```
+axios.interceptors.response.use(function(response){//拦截之后，用这个function来代替响应
+  response.data={name:'bomber'}
+  return response//函数记得返回信息
+})
+
+axios.get('/book/1')
+  .then((response)=>{
+  console.log(response.data)//这里就可以获取到response.data={name:'bomber'}
+})
+```
+* **这样服务器都可以不用做了，前端部分就可以把响应写死了**
+* 此时Jsbin上的[代码链接](https://jsbin.com/gawavogote/1/edit?html,js,output)
+***
+* 课程上使用 axios 的拦截器是在 jsbin.com 中进行的。
+* 如果你在本地实验会发现拦截器不起作用，这是正常的。
+* 如果想让本地的拦截器也起作用，就需要自己写 server.js 来响应所有请求。
+***
+* 本地我们需要给一个路由即可，比如前端的路由是
+```
+  axios.get('/book/1')
+    .then((response)=>{
+    console.log(response.data)
+  })
+```
+* 后端给出一样的路由'/book/1'
+```
+else if(path='book/1'){
+    response.statusCode = 200//这里需要写成200
+    response.setHeader('Content-Type', 'text/html;charset=utf-8')
+    response.write(`//如果被拦截这里的响应就不执行，而是执行前端自己写的响应代码
+      {
+        "error": "not found"
+      }
+    `)
+    response.end()
+  }
+```
