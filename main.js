@@ -1,11 +1,15 @@
 axios.interceptors.response.use(function(response){
-    response.data={name:'bomber'}
-    return response
-  })
+  let config=response.config
+  let {method,url,data}=config//这个data是请求的data
+  if(url==='./book/1'&&method==='get'){
+      response.data={name:'bomber'}
+  }
+  return response
+})
   
   axios.get('./book/1')//这里前面必须要一个.
     .then((response)=>{
-    console.log(response.data)
+    console.log(response)
   })
 
 $('#addOne').on('click',function(){

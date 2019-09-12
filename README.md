@@ -128,3 +128,26 @@ axios.get('./book/1')//这里前面必须要一个.
     console.log(response.data)
   })
 ```
+#### 前端部分根据不同的url，也就是路由来Mock(仿制)不同的数据
+* 接下来我们前端部分也可以根据不同的url，也就是路径来Mock(仿制)不同的数据。
+* 前端部分通过下面的代码可以拿到这个url，在response里面有一个config属性。config里面就有url的属性，不仅如此还有前端**请求，注意这里的data是请求的data，如果用post请求就会有这个data**，还有前端的请求方法method.
+1. config里面就有url的属性
+2. 如果用post,config里面还有前端的data.简单的说**response.data是后端响应的数据**,而**response.config.data是前端请求的数据**.
+3. config里面还有前端的请求方法method
+* 咱们前端代码就可以像后端一样通过if..else if...来写路由了
+```
+axios.interceptors.response.use(function(response){
+  let config=response.config
+  let {method,url,data}=config//这个data是请求的data
+  if(url==='./book/1'&&method==='get'){
+      response.data={name:'bomber'}
+  }
+  return response
+})
+  
+  axios.get('./book/1')//这里前面必须要一个.
+    .then((response)=>{
+    console.log(response)
+  })
+```
+* 此时如果改成axios.get('./book/2')，那么路径和和**伪造的路径不同**，那么就不会修改这个response了
