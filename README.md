@@ -121,3 +121,10 @@ else if(path='book/1'){
     response.end()
   }
 ```
+*   前端路径必须要一个点
+```
+axios.get('./book/1')//这里前面必须要一个.
+    .then((response)=>{
+    console.log(response.data)
+  })
+```

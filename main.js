@@ -3,7 +3,7 @@ axios.interceptors.response.use(function(response){
     return response
   })
   
-  axios.get('/book/1')
+  axios.get('./book/1')//这里前面必须要一个.
     .then((response)=>{
     console.log(response.data)
   })
