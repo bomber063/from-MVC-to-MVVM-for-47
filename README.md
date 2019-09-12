@@ -330,7 +330,7 @@ axios.interceptors.response.use(function(response){
 ```
 * 修改后的[jsbin代码链接](https://jsbin.com/ruyaduvuxo/1/edit?js,output)
 * 不过目前的代码像意大利面条一样的代码，也就是长短不一，错综复杂。
-### 引入MVC
+### 引入MVC(MVC思想来重构代码)
 * 在引入MVC之前先把伪造的后台及数据库包装成函数调用形式
 ```
 fakeData()
@@ -357,3 +357,52 @@ function fakeData() {
   })
 }
 ```
+* MVC思想就是三块代码M（数据），V（可视化的部分）,C（逻辑控制部分），详细见前面的链接——[MVC-for-38](https://github.com/bomber063/MVC-for-38)和(object-oriented-programming-for-40)[https://github.com/bomber063/object-oriented-programming-for-40]
+* model部分
+```
+let model={
+  data:{
+    name:'',
+    number:0,
+    id:''
+  },
+  fetch:function(id){//获取数据
+    return axios.get(`./book/${id}`)//这个是把axios返回出去
+    .then((response)=>{//这里的response如果下面要用这里必须传进来作为参数
+      this.data=response.data
+      return response//这个response是返回给axios
+    })
+  },
+  updata:function(data,id){//更新数据
+    return axios.put(`./book/${id}`,data)//这个是把axios返回出去
+    .then((response)=>{//这里的response如果下面要用这里必须传进来作为参数
+      this.data=response.data
+      return response//这个response是返回给axios
+    })
+  }
+}
+```
+* 获取数据和更新数据修改的部分
+```
+// axios.get('./book/1')//这个请求是首次进入之后的替换代码
+model.fetch(1)
+
+// axios.put('./book/1', { number: newNumber })//前端请求传入的数据{number:newNumber}
+model.updata({number:newNumber},1)
+
+// axios.put('./book/1', { number: 0 })//前端请求传入的数据{number:0}
+model.updata({number:0},1)
+```
+
+* 注意的地方
+1. return 返回两次，一次是then后面的函数的返回，也就是返回repsonse，一次是axios
+2. 
+```
+      $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+     //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+```
+3. .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
+4. .then(({ data }) => {//这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
+* jsbin代码目前为止的[链接](https://jsbin.com/gahatuvaqo/1/edit?js,output)
+
+
