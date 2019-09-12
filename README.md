@@ -236,4 +236,97 @@ $('#app').on('click','#reset',function(){
 })
 ```
 * **这样就算html替换了，还是可以产生事件效果。因为#app是始终没有变动，只是里面的内容更换了**可以实现+1-1和归零操作了。
-* 目前为止的[jsbin链接](https://jsbin.com/foqeyipoqe/1/edit?js,output)
+* 目前为止的[jsbin链接](https://jsbin.com/foqeyipoqe/1/edit?js,output),做的比较简单的功能：
+1. 先用axios拦截器拦截后。
+2. 然后用它的AJAX获取数据。
+3. 把获取到的数据替换到HTML里面去
+4. 同时通过事件委托监听app的点击事件，如果点击的是addOne就+1，如果点击的是minusOne就-1，如果是reset就是归零。
+* 目前为止+1-1归零的动作只是通过修改HTML上面的页面，所以并不是通过一种数据库的形式来更改，需要通过发请求来实现这个+1-1归零的动作的功能。
+### 通过发请求（比如put请求）来实现+1-1归零的动作
+* [put请求说明](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/PUT)
+#### Object.assign()
+* 这里先引入的一个新学习的API-[Object.assign()](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/assign),这个方法用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+* 如果目标对象中的属性具有相同的键，则属性将被源对象中的属性覆盖。后面的源对象的属性将类似地覆盖前面的源对象的属性。也就是说属性被后续参数中具有相同属性的其他对象覆盖。
+* 比如
+```
+var book={name:'bomber',number:1,id:2}
+Object.assign(book,{name:'jack',number:2})
+//下面是输出
+{name: "jack", number: 2, id: 2}//name和number已经被覆盖了
+```
+* 还可以多次赋值
+```
+var book={name:'bomber',number:1,id:2}
+Object.assign(book,{name:'jack'},{number:2})
+//下面是输出
+{name: "jack", number: 2, id: 2}
+```
+* 多次赋值并且有重复的
+```
+var book={name:'bomber',number:1,id:2}
+Object.assign(book,{name:'jack',number:3},{number:2})
+//下面是输出
+{name: "jack", number: 2, id: 2}
+```
+#### 用Object.assign()修改使用的代码
+* 仿造的后台修改的代码
+```
+let book={ 
+    name:'Javascript高级程序设计',
+    number:2,
+    id:1//id代表路由的book/1也就是book后面这个1     
+}
+axios.interceptors.response.use(function(response){
+//   let config=response.config
+//   let {method,url,data}=config//这个data是请求的data
+  let {config:{method,url,data}}=response//把前面两行代码所谓这一行代码
+  
+  if(url==='./book/1'&&method==='get'){
+      response.data=book
+  }
+   else if(url==='./book/1'&&method==='put'){
+     data=JSON.parse(response.config.data)//因为请求的数据response.config.data是一个字符串，所以要经过JSON.parse转换为对象
+     Object.assign(book,data)//因为本身就会返回给目标对象book,所以不用赋值给book了
+     response.data=book
+     console.log(data)
+  }
+  
+  return response
+})
+```
+* 前面说过response.data时后台的数据，也可以说是数据库中的数据，而response.url.data是前端请求发送过来的数据
+* 所以前端的页面代码部分发请求部分的代码修改为
+```
+  $('#app').on('click','#addOne',function(){//在点击#app里面带的任何元素的时候如果符合#addOne这个选择器就会执行下面的代码
+    var oldNumber=$('#number').text()//他是一个字符串string
+    var newNumber=oldNumber-0+1//减0是为了把字符串转换为数字
+    // $('#number').text(newNumber)
+    axios.put('./book/1',{number:newNumber})//前端请求传入的数据{number:newNumber}
+    .then((response)=>{
+  //     response.number=newNumber
+         $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+    })
+  })
+  
+  $('#app').on('click','#minusOne',function(){
+    var oldNumber=$('#number').text()//他是一个字符串string
+    var newNumber=oldNumber-0-1//减0是为了把字符串转换为数字
+    // $('#number').text(newNumber)
+    axios.put('./book/1',{number:newNumber})//前端请求传入的数据{number:newNumber}
+    .then((response)=>{
+  //     response.number=newNumber
+         $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+    })
+  })
+  
+  $('#app').on('click','#reset',function(){
+    // $('#number').text(0)
+    axios.put('./book/1',{number:0})//前端请求传入的数据{number:0}
+    .then((response)=>{
+  //     response.number=0
+         $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+    })
+  })
+```
+* 修改后的[jsbin代码链接](https://jsbin.com/ruyaduvuxo/1/edit?js,output)
+* 不过目前的代码像意大利面条一样的代码，也就是长短不一，错综复杂。
