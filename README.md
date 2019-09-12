@@ -151,3 +151,89 @@ axios.interceptors.response.use(function(response){
   })
 ```
 * 此时如果改成axios.get('./book/2')，那么路径和和**伪造的路径不同**，那么就不会修改这个response了
+### 接下来通过拦截器来修改前端的显示代码
+* 前端通过占位符修改，到时需要替换这个占位符
+```
+  <div>
+    书名：《__name__》
+    数量：<span id='number'>__number__</span>
+  </div>
+```
+* 把response.data修改下
+```
+      response.data={
+        name:'Javascript高级程序设计',
+        number:2,
+        id:1//id代表路由的book/1也就是book后面这个1
+      }
+```
+* 通过ES6的析构，前面写过[ES的析构博客](https://zhuanlan.zhihu.com/p/81667568)
+```
+//   let config=response.config
+//   let {method,url,data}=config//这个data是请求的data
+  let {config:{method,url,data}}=response//把前面两行代码所谓这一行代码
+```
+* 前端部分请求的代码
+```
+axios.get('./book/1')
+  .then(({data})=>{//这里的{data}就是let data=response.data
+  console.log(data)//这样就可以拿到前面的response.data
+})
+```
+* 接下来需要用到jQuery的[html()](https://www.jquery123.com/html/),它可以获取集合中第一个匹配元素的HTML内容 或 设置每一个匹配元素的html内容。
+* 代码修改为
+```
+axios.get('./book/1')
+  .then(({data})=>{//这里的{data}就是let data=response.data
+//   data=JSON.parse(data)
+  let originalHtml=$('#app').html()//获取老的html
+  let newHtml=originalHtml.replace('__name__',data.name)
+    .replace('__number__',data.number)//修改占位符
+  $('#app').html(newHtml)//这一步是设置新的html
+})
+```
+* 此时我的代码因为监听的这个button被替换了为新的button了，也就是新的html.所以还需要用到[.on()](https://www.jquery123.com/on/)的委托事件的用法，就是
+* **委派事件**的方法只有一个元素的事件处理程序，tbody，并且事件**只会向上冒泡一层**（从被点击的tr 到 tbody ）:
+```
+$("#dataTable tbody").on("click", "tr", function(event){
+  alert($(this).text());
+});
+```
+* 代码由
+```
+$('#addOne').on('click', function () {
+  var oldNumber = $('#number').text()//他是一个字符串string
+  var newNumber = oldNumber - 0 + 1//减0是为了把字符串转换为数字
+  $('#number').text(newNumber)
+})
+
+$('#minusOne').on('click', function () {
+  var oldNumber = $('#number').text()//他是一个字符串string
+  var newNumber = oldNumber - 0 - 1//减0是为了把字符串转换为数字
+  $('#number').text(newNumber)
+})
+
+$('#reset').on('click', function () {
+  $('#number').text(0)
+})
+```
+* 修改为
+```
+$('#app').on('click','#addOne',function(){//在点击#app里面带的任何元素的时候如果符合#addOne这个选择器就会执行下面的代码
+  var oldNumber=$('#number').text()//他是一个字符串string
+  var newNumber=oldNumber-0+1//减0是为了把字符串转换为数字
+  $('#number').text(newNumber)
+})
+
+$('#app').on('click','#minusOne',function(){
+  var oldNumber=$('#number').text()//他是一个字符串string
+  var newNumber=oldNumber-0-1//减0是为了把字符串转换为数字
+  $('#number').text(newNumber)
+})
+
+$('#app').on('click','#reset',function(){
+  $('#number').text(0)
+})
+```
+* **这样就算html替换了，还是可以产生事件效果。因为#app是始终没有变动，只是里面的内容更换了**可以实现+1-1和归零操作了。
+* 目前为止的[jsbin链接](https://jsbin.com/foqeyipoqe/1/edit?js,output)
