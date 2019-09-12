@@ -405,4 +405,7 @@ model.updata({number:0},1)
 4. .then(({ data }) => {//这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
 * jsbin代码目前为止的[链接](https://jsbin.com/gahatuvaqo/1/edit?js,output)
 
+## 其他
+* 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
+
 
