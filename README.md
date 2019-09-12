@@ -330,3 +330,30 @@ axios.interceptors.response.use(function(response){
 ```
 * 修改后的[jsbin代码链接](https://jsbin.com/ruyaduvuxo/1/edit?js,output)
 * 不过目前的代码像意大利面条一样的代码，也就是长短不一，错综复杂。
+### 引入MVC
+* 在引入MVC之前先把伪造的后台及数据库包装成函数调用形式
+```
+fakeData()
+
+function fakeData() {
+  let book = {
+    name: 'Javascript高级程序设计',
+    number: 2,
+    id: 1//id代表路由的book/1也就是book后面这个1     
+  }
+
+  axios.interceptors.response.use(function (response) {
+    let config = response.config
+    let { method, url, data } = config//这个data是请求的data
+    if (url === './book/1' && method === 'get') {
+      response.data = book
+    }
+    else if (url === './book/1' && method === 'put') {
+      data = JSON.parse(response.config.data)//因为请求的数据response.config.data是一个字符串，所以要经过JSON.parse转换为对象
+      Object.assign(book, data)//因为本身就会返回给目标对象book,所以不用赋值给book了
+      response.data = book
+    }
+    return response
+  })
+}
+```
