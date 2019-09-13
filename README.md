@@ -442,6 +442,12 @@ let view={
 2. render的数据从mocel中来，所以当model获取和升级数据的成功后就来操作这个view，也就是view.render(model.data)
 3. 这样就可以把替换占位符的操作放到view里面实现了。
 * 目前为止的[JSBIN链接](https://jsbin.com/jatehuneqi/1/edit?js,output)
+#### 最后一个也就是逻辑控制controller(主要是JS来实现控制view和model)
+* 
+
+* 注意的地方
+1. controller是来控制view和model的。所以要把view和model传进来。
+* 目前为止的[jsbin链接](https://jsbin.com/buqelanaki/1/edit?js,output)
 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
