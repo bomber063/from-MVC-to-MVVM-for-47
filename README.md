@@ -358,6 +358,7 @@ function fakeData() {
 }
 ```
 * MVC思想就是三块代码M（数据），V（可视化的部分）,C（逻辑控制部分），详细见前面的链接——[MVC-for-38](https://github.com/bomber063/MVC-for-38)和(object-oriented-programming-for-40)[https://github.com/bomber063/object-oriented-programming-for-40]
+#### model主要跟数据有关（数据本身，获取数据，更新数据等）
 * model部分
 ```
 let model={
@@ -404,6 +405,43 @@ model.updata({number:0},1)
 3. .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
 4. .then(({ data }) => {//这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
 * jsbin代码目前为止的[链接](https://jsbin.com/gahatuvaqo/1/edit?js,output)
+#### 接下来增加view，所有跟html相关的都由view来做（比如html中的某个元素，元素的内容等）
+* view部分
+```
+let view={
+  el:'#app',//某个元素
+  //元素里面的内容
+  template:`
+    <div>
+    书名：《__name__》
+    数量：<span id='number'>__number__</span>
+    </div>
+    <div>
+      <button id='addOne'>加1</button>
+      <button id='minusOne'>减1</button>
+      <button id='reset'>归零</button>
+    </div>`,
+  //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
+  render(data){//这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
+    let html=this.template.replace('__number__',data.number)
+    .replace('__name__',data.name)//因为有占位符需要替换
+    $(this.el).html(html)
+  }
+}
+```
+* 获取数据和更新数据修改的部分
+```
+    // $('#app').html(newHtml)//这一步是设置新的html
+    view.render(model.data)//这里其实就是response.data
+
+    // $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+    view.render(model.data)//这里其实就是response.data
+```
+* 注意的地方：
+1. view里面有某个元素比如el:#app,元素的内容，就是template，render函数，render意思就是初始化页面的DOM，将template里面的节点解析成DOM。
+2. render的数据从mocel中来，所以当model获取和升级数据的成功后就来操作这个view，也就是view.render(model.data)
+3. 这样就可以把替换占位符的操作放到view里面实现了。
+* 目前为止的[JSBIN链接](https://jsbin.com/jatehuneqi/1/edit?js,output)
 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
