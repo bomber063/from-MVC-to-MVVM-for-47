@@ -35,26 +35,36 @@ data: {
 resource:'book'
 })//这样我们每次声明一个model代码就简化为只需要两个属性，一个data，一个resource
 
-let view = {
-  el: '#app',//某个元素
-  //元素里面的内容
-  template: `
-    <div>
-    书名：《__name__》
-    数量：<span id='number'>__number__</span>
-    </div>
-    <div>
-      <button id='addOne'>加1</button>
-      <button id='minusOne'>减1</button>
-      <button id='reset'>归零</button>
-    </div>`,
-  //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
-  render(data) {//这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
-    let html = this.template.replace('__number__', data.number)
-      .replace('__name__', data.name)//因为有占位符需要替换
-    $(this.el).html(html)
-  }
+function View(options){
+  this.el=options.el
+  this.template=options.template
+//   el: el, //某个元素
+//   //元素里面的内容
+//   template: template
 }
+
+View.prototype.render=function(data){
+  //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
+   //这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
+  let html = this.template.replace('__number__', data.number)
+    .replace('__name__', data.name) //因为有占位符需要替换
+  $(this.el).html(html)
+}
+
+let view=new View({  
+el: '#app', //某个元素
+//元素里面的内容
+template: `
+  <div>
+  书名：《__name__》
+  数量：<span id='number'>__number__</span>
+  </div>
+  <div>
+    <button id='addOne'>加1</button>
+    <button id='minusOne'>减1</button>
+    <button id='reset'>归零</button>
+  </div>`
+})
 
 let controller = {
   init(options) {

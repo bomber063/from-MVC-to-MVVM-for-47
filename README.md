@@ -622,8 +622,49 @@ resource:'book'
 ### view部分
 * view构造函数的代码
 ```
-
+function View(options){
+  this.el=options.el
+  this.template=options.template
+//   el: el, //某个元素
+//   //元素里面的内容
+//   template: template
+}
 ```
+* view原型上的代码
+```
+View.prototype.render=function(data){
+  //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
+   //这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
+  let html = this.template.replace('__number__', data.number)
+    .replace('__name__', data.name) //因为有占位符需要替换
+  $(this.el).html(html)
+}
+```
+* 用new创建并传参调用的代码
+```
+let view=new View({  
+  el: '#app', //某个元素
+  //元素里面的内容
+  template: `
+    <div>
+    书名：《__name__》
+    数量：<span id='number'>__number__</span>
+    </div>
+    <div>
+      <button id='addOne'>加1</button>
+      <button id='minusOne'>减1</button>
+      <button id='reset'>归零</button>
+    </div>`
+})
+```
+* 目前为止的[JSbin链接](https://jsbin.com/niwatehora/1/edit?js,output)
+### 小结
+* new构造函数主要做了下面的事情
+1. 创建一个临时对象，并用this指向这个临时对象
+2. 把this绑定了实例对象model
+3. this的共有属性叫做prototype  
+4. return这个this
+
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
