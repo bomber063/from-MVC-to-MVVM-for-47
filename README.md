@@ -507,10 +507,24 @@ controller.init({
   model: model
 })
 ```
+* 这还可以继续优化，把绑定事件函数里面的函数有三个，可以把这三个单独拿出来放到controller里面
+```
+addOne(){},
+minusOne(){},
+reset(){},
+    bindEvents(view,model) {
+      //下面的代码是点击加1或者减一或者归零后的代码
+      //下面的都是绑定事件，所以this会被改变，所以上面需要把view和model传进来
+      $(view.el).on('click', '#addOne', this.addOne.bind(this))//因为绑定事假年后this会改变，所以bind(this)为了不让this改变
+      $(view.el).on('click', '#minusOne', this.minusOne.bind(this))
+      $(view.el).on('click', '#reset', this.reset.bind(this))
+    }
+```
 * 注意的地方
 1. controller是来控制view和model的。所以要把view和model传进来。
-2. 绑定事件也需要传进来，因为绑定事件会改变this，所以this需要bind(this)，或者用箭头函数，或者直接把view和model传进里面去，比如bindEvents(view,model)
-* 目前为止的[jsbin链接](https://jsbin.com/dodoyosiva/edit?js,output)
+2. 绑定事件也需要传进来，**因为绑定事件会改变this，所以this需要bind(this)，或者用箭头函数，或者直接把view和model传进里面去，比如bindEvents(view,model)**
+3. controller里面的函数是简化的写法，应该说是ES6的写法，**比如addOne(){}相当于addOne:function(){}**
+* 目前为止的[jsbin链接](https://jsbin.com/soxunanuba/edit?js,output)
 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)

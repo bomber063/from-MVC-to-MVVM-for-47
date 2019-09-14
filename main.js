@@ -2,32 +2,32 @@ fakeData()
 
 //上面是假的数据库后台
 
-let model={
-  data:{
-    name:'',
-    number:0,
-    id:''
+let model = {
+  data: {
+    name: '',
+    number: 0,
+    id: ''
   },
-  fetch:function(id){//获取数据
+  fetch: function (id) {//获取数据
     return axios.get(`./book/${id}`)//这个是把axios返回出去
-    .then((response)=>{//这里的response如果下面要用这里必须传进来作为参数
-      this.data=response.data
-      return response//这个response是返回给axios
-    })
+      .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
+        this.data = response.data
+        return response//这个response是返回给axios
+      })
   },
-  updata:function(data,id){//更新数据
-    return axios.put(`./book/${id}`,data)//这个是把axios返回出去
-    .then((response)=>{//这里的response如果下面要用这里必须传进来作为参数
-      this.data=response.data
-      return response//这个response是返回给axios
-    })
+  updata: function (data, id) {//更新数据
+    return axios.put(`./book/${id}`, data)//这个是把axios返回出去
+      .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
+        this.data = response.data
+        return response//这个response是返回给axios
+      })
   }
 }
 
-let view={
-  el:'#app',//某个元素
+let view = {
+  el: '#app',//某个元素
   //元素里面的内容
-  template:`
+  template: `
     <div>
     书名：《__name__》
     数量：<span id='number'>__number__</span>
@@ -38,76 +38,79 @@ let view={
       <button id='reset'>归零</button>
     </div>`,
   //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
-  render(data){//这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
-    let html=this.template.replace('__number__',data.number)
-    .replace('__name__',data.name)//因为有占位符需要替换
+  render(data) {//这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
+    let html = this.template.replace('__number__', data.number)
+      .replace('__name__', data.name)//因为有占位符需要替换
     $(this.el).html(html)
   }
 }
 
 let controller = {
   init(options) {
-      let {
-        view, model
-      } = options
-      this.view = view
-      this.model = model
-      this.model.fetch(1)
-        .then(() => { //这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
-          //   data=JSON.parse(data)
-          //   let data=response.data
-          //   console.log(data)
-          //   let originalHtml=$('#app').html()//获取老的html
-          //   let newHtml=originalHtml.replace('__name__',data.name)
-          //     .replace('__number__',data.number)//修改占位符
-          //   $('#app').html(newHtml)//这一步是设置新的html
-          this.view.render(this.model.data) //这里其实就是response.data
-        })
-      this.bindEvents(view,model)//这个需要把view和model传进来
-    },
-    bindEvents(view,model) {
-      //下面的代码是点击加1或者减一或者归零后的代码
-      //下面的都是绑定事件，所以this会被改变，所以上面需要把view和model传进来
-      $(view.el).on('click', '#addOne', function() {
-        var oldNumber = $('#number').text() //他是一个字符串string
-        var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
-        model.updata({
-            number: newNumber
-          }, 1)
-          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
-            //     response.number=newNumber
-            view.render(model.data) //这里其实就是response.data
-              //       $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-          })
-      }),
-      $(view.el).on('click', '#minusOne', function() {
-        var oldNumber = $('#number').text() //他是一个字符串string
-        var newNumber = oldNumber - 0 - 1 //减0是为了把字符串转换为数字
-          //   $('#number').text(newNumber)
-        model.updata({
-            number: newNumber
-          }, 1)
-          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
-            //     response.number=newNumber
-           view.render(model.data) //这里其实就是response.data
-              //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-          })
-      }),
-      $(view.el).on('click', '#reset', function() {
-        //   $('#number').text(0)
-        model.updata({
-            number: 0
-          }, 1)
-          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
-            //     response.number=0
-            view.render(model.data) //这里其实就是response.data
-              //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-          })
+    let {
+      view, model
+    } = options
+    this.view = view
+    this.model = model
+    this.model.fetch(1)
+      .then(() => { //这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
+        //   data=JSON.parse(data)
+        //   let data=response.data
+        //   console.log(data)
+        //   let originalHtml=$('#app').html()//获取老的html
+        //   let newHtml=originalHtml.replace('__name__',data.name)
+        //     .replace('__number__',data.number)//修改占位符
+        //   $('#app').html(newHtml)//这一步是设置新的html
+        this.view.render(this.model.data) //这里其实就是response.data
       })
-    }
+    this.bindEvents(view, model)//这个需要把view和model传进来
+  },
+  addOne() {
+    var oldNumber = $('#number').text() //他是一个字符串string
+    var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
+    model.updata({
+      number: newNumber
+    }, 1)
+      .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+        //     response.number=newNumber
+        view.render(model.data) //这里其实就是response.data
+        //       $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+        //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+      })
+  },
+  minusOne() {
+    var oldNumber = $('#number').text() //他是一个字符串string
+    var newNumber = oldNumber - 0 - 1 //减0是为了把字符串转换为数字
+    //   $('#number').text(newNumber)
+    model.updata({
+      number: newNumber
+    }, 1)
+      .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+        //     response.number=newNumber
+        view.render(model.data) //这里其实就是response.data
+        //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+        //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+      })
+  },
+  reset() {
+    //   $('#number').text(0)
+    model.updata({
+      number: 0
+    }, 1)
+      .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+        //     response.number=0
+        view.render(model.data) //这里其实就是response.data
+        //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+        //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+      })
+  },
+  bindEvents(view, model) {
+    //下面的代码是点击加1或者减一或者归零后的代码
+    //下面的都是绑定事件，所以this会被改变，所以上面需要把view和model传进来
+    $(view.el).on('click', '#addOne', this.addOne.bind(this)),//因为绑定事假年后this会改变，所以bind(this)为了不让this改变
+    $(view.el).on('click', '#minusOne', this.minusOne.bind(this)),
+    $(view.el).on('click', '#reset', this.reset.bind(this))
+  }
 }
 
 controller.init({
