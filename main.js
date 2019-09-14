@@ -1,28 +1,39 @@
 fakeData()
 
 //上面是假的数据库后台
-
-let model = {
-  data: {
-    name: '',
-    number: 0,
-    id: ''
-  },
-  fetch: function (id) {//获取数据
-    return axios.get(`./book/${id}`)//这个是把axios返回出去
-      .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
-        this.data = response.data
-        return response//这个response是返回给axios
-      })
-  },
-  updata: function (data, id) {//更新数据
-    return axios.put(`./book/${id}`, data)//这个是把axios返回出去
-      .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
-        this.data = response.data
-        return response//这个response是返回给axios
-      })
-  }
+function Model(options,resource){//创建一个构造函数
+  console.log(this)
+ this.data=options.data//这个数据是特有的数据所以单独写在这里，这里数据可能是书本可能是车辆。
+ this.resource=options.resource//这个resource有可能是书book,有可能是车car
 }
+
+Model.prototype.fetch=function(id) { //在原型上面获取数据
+  return axios.get(`./${this.resource}/${id}`) //这个是把axios返回出去，这里的book其实也是变量。
+    .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+      this.data = response.data
+      return response //这个response是返回给axios
+    })
+}
+
+Model.prototype.updata=function(data, id) { //在原型上面更新数据
+  return axios.put(`./${this.resource}/${id}`, data) //这个是把axios返回出去
+    .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+      this.data = response.data
+      return response //这个response是返回给axios
+    })
+}
+
+let model=new Model({//这里创建了new，也就是做了四步。1.创建一个临时对象，并用this指向这个临时对象
+//2.把this绑定了实例对象model
+//3.this的共有属性叫做prototype  
+//4.return这个this
+data: {
+  name: '',
+  number: 0,
+  id: ''
+},
+resource:'book'
+})//这样我们每次声明一个model代码就简化为只需要两个属性，一个data，一个resource
 
 let view = {
   el: '#app',//某个元素

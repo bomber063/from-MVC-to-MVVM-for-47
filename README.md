@@ -573,8 +573,57 @@ let controller = {
 2. 然后是一个view来拿到一个元素#app，然后这个元素里面的template，也就是具体内容是什么，然后有一个render，他就是用来渲染出页面,render意思就是初始化页面的DOM，将template里面的节点解析成DOM。
 3. 最后是controller，它会把view和model都记在自己的下面，然后render初始第一次渲染这个页面，也就是初始化页面的DOM，然后获取第一个本书，this.model.fetch(1)也就是给通过某个路径请求成功后的初次渲染页面
 4. 然后再controller里面绑定了事件——bindEvents,这里的绑定事件需要绑定一个this，，如果不bind，那么this就会改变为交互的某个元素，绑定了this之后，也就是bind(this)，这样可以保证this不会被改变。也就是当前的controller。
-### 把共同属性写在一起，优化代码
-* 
+## 把共同属性用构造函数写在一起，优化代码
+* 这里只修改model和view。
+* controller太多了，所以暂时不修改
+* 这里用到了new构造，之前有学习和总结过，如果忘记可以看前面的[记录——object-oriented-programming-for-40](https://github.com/bomber063/object-oriented-programming-for-40),或者[老师的博客](https://zhuanlan.zhihu.com/p/23987456)
+### model部分
+* model的构造函数
+```
+function Model(options,resource){//创建一个构造函数
+  console.log(this)
+ this.data=options.data//这个数据是特有的数据所以单独写在这里，这里数据可能是书本可能是车辆。
+ this.resource=options.resource//这个resource有可能是书book,有可能是车car
+}
+```
+* 原型上的代码
+```
+Model.prototype.fetch=function(id) { //在原型上面获取数据
+  return axios.get(`./${this.resource}/${id}`) //这个是把axios返回出去，这里的book其实也是变量。
+    .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+      this.data = response.data
+      return response //这个response是返回给axios
+    })
+}
+
+Model.prototype.updata=function(data, id) { //在原型上面更新数据
+  return axios.put(`./${this.resource}/${id}`, data) //这个是把axios返回出去
+    .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+      this.data = response.data
+      return response //这个response是返回给axios
+    })
+}
+```
+* 用new创建并传参调用的代码
+```
+let model=new Model({//这里创建了new，也就是做了四步。1.创建一个临时对象，并用this指向这个临时对象
+//2.把this绑定了实例对象model
+//3.this的共有属性叫做prototype  
+//4.return这个this
+data: {
+  name: '',
+  number: 0,
+  id: ''
+},
+resource:'book'
+})//这样我们每次声明一个model代码就简化为只需要两个属性，一个data，一个resource
+```
+* 目前为止的[jsbin链接](https://jsbin.com/sowehomoje/1/edit?js,output)
+### view部分
+* view构造函数的代码
+```
+
+```
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
