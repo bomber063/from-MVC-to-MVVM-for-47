@@ -439,7 +439,7 @@ let view={
 ```
 * 注意的地方：
 1. view里面有某个元素比如el:#app,元素的内容，就是template，render函数，render意思就是初始化页面的DOM，将template里面的节点解析成DOM。
-2. render的数据从mocel中来，所以当model获取和升级数据的成功后就来操作这个view，也就是view.render(model.data)
+2. render的数据从model中来，所以当model获取和升级数据的成功后就来操作这个view，也就是view.render(model.data)
 3. 这样就可以把替换占位符的操作放到view里面实现了。
 * 目前为止的[JSBIN链接](https://jsbin.com/jatehuneqi/1/edit?js,output)
 #### 最后一个也就是逻辑控制controller(主要是JS来实现控制view和model)
@@ -525,7 +525,7 @@ reset(){},
 ```
     this.bindEvents()
 ```
-* addOne()，minusOne()，reset()里面可以使用this来代替controller，只列出了增加了this的地方，可删除传入参数的地方,其他部分代码删除
+* addOne()，minusOne()，reset()里面可以使用this来代替controller，**只列出了增加了this的地方，可删除传入参数的地方,其他部分代码删除**
 ```
 let controller = {
   init(options) {
@@ -568,8 +568,13 @@ let controller = {
 3. controller里面的函数是简化的写法，应该说是ES6的写法，**比如addOne(){}相当于addOne:function(){}**
 4. 当this不会改变的时候是可以使用this的，如果this会改变就需要传入参数进来，或者绑定this，比如bind(this)
 * 目前为止的[jsbin链接](https://jsbin.com/goxurafubo/1/edit?js,output)
-
-
+#### 小结一下目前MVC做了什么
+1. 首先一个model来初始数——data，然后获取数据fetch，然后更新数据updata
+2. 然后是一个view来拿到一个元素#app，然后这个元素里面的template，也就是具体内容是什么，然后有一个render，他就是用来渲染出页面,render意思就是初始化页面的DOM，将template里面的节点解析成DOM。
+3. 最后是controller，它会把view和model都记在自己的下面，然后render初始第一次渲染这个页面，也就是初始化页面的DOM，然后获取第一个本书，this.model.fetch(1)也就是给通过某个路径请求成功后的初次渲染页面
+4. 然后再controller里面绑定了事件——bindEvents,这里的绑定事件需要绑定一个this，，如果不bind，那么this就会改变为交互的某个元素，绑定了this之后，也就是bind(this)，这样可以保证this不会被改变。也就是当前的controller。
+### 把共同属性写在一起，优化代码
+* 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
