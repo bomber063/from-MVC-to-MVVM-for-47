@@ -685,6 +685,7 @@ View.prototype.render=function(data){
 * **这里我犯了2个错误导致BUG了半天**
 1. for in循环的时候，因为this.template是保持不变的，所以需要传给一个变量才可以，不然每次开始的时候都是没有替换过的。
 2. for in循环的时候，这里的data.key就是等于data.['key']的写法，这里的key是一个变量，不是一个字符串，写成字符串就得不到要的结果了
+* 之前的博客[《JS 历史、数据类型、对象、typeof》](https://zhuanlan.zhihu.com/p/59302839)有说明过
 
 ### 小结
 * new构造函数主要做了下面的事情
