@@ -520,11 +520,55 @@ reset(){},
       $(view.el).on('click', '#reset', this.reset.bind(this))
     }
 ```
+* 可以不用通过传参数的形式，比如bindEvents(view,model)可以写成bindEvents()，因为不是绑定事件里面的this可以是controller，所以this没有改变，改变了的this,比如绑定事件的this用bind(this)。
+* init函数里面的bindEvents
+```
+    this.bindEvents()
+```
+* addOne()，minusOne()，reset()里面可以使用this来代替controller，只列出了增加了this的地方，可删除传入参数的地方,其他部分代码删除
+```
+let controller = {
+  init(options) {
+    this.bindEvents()
+  },
+  addOne() {
+    this.model.updata({
+      number: newNumber
+    }, 1)
+      .then((response) => { 
+        this.view.render(this.model.data) //这里其实就是response.data
+      })
+  },
+  minusOne() {
+    this.model.updata({
+      number: newNumber
+    }, 1)
+      .then((response) => { 
+        this.view.render(this.model.data) //这里其实就是response.data
+      })
+  },
+  reset() {
+    this.model.updata({
+      number: 0
+    }, 1)
+      .then((response) => { 
+        this.view.render(this.model.data) 
+      })
+  },
+  bindEvents() {
+    $(this.view.el).on('click', '#addOne', this.addOne.bind(this)),//因为绑定事假年后this会改变，所以bind(this)为了不让this改变
+    $(this.view.el).on('click', '#minusOne', this.minusOne.bind(this)),
+    $(this.view.el).on('click', '#reset', this.reset.bind(this))
+  }
+}
+```
 * 注意的地方
 1. controller是来控制view和model的。所以要把view和model传进来。
 2. 绑定事件也需要传进来，**因为绑定事件会改变this，所以this需要bind(this)，或者用箭头函数，或者直接把view和model传进里面去，比如bindEvents(view,model)**
 3. controller里面的函数是简化的写法，应该说是ES6的写法，**比如addOne(){}相当于addOne:function(){}**
-* 目前为止的[jsbin链接](https://jsbin.com/soxunanuba/edit?js,output)
+4. 当this不会改变的时候是可以使用this的，如果this会改变就需要传入参数进来，或者绑定this，比如bind(this)
+* 目前为止的[jsbin链接](https://jsbin.com/goxurafubo/1/edit?js,output)
+
 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
