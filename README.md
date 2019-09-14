@@ -658,6 +658,34 @@ let view=new View({
 })
 ```
 * 目前为止的[JSbin链接](https://jsbin.com/niwatehora/1/edit?js,output)
+#### 用for in循环来代替
+* 修改前
+```
+View.prototype.render=function(data){
+   let html = this.template.replace('__number__', data.number)
+     .replace('__name__', data.name) //因为有占位符需要替换
+  $(this.el).html(html)
+}
+```
+* 修改后
+```
+View.prototype.render=function(data){
+  // let html = this.template.replace('__number__', data.number)
+    // .replace('__name__', data.name) //因为有占位符需要替换
+    let html=this.template
+    for (let key in data){
+      html=html.replace(`__${key}__`,data[key])//因为this.template是保持不变的，所以需要传给一个变量才可以，不然每次开始的时候都是没有替换过的
+      //这里的data.key就是等于data.['key']的写法，这里的key是一个变量，不是一个字符串，写成字符串就得不到要的结果
+    }
+  $(this.el).html(html)
+}
+```
+* 目前为止的[JSbin链接](https://jsbin.com/wevaginodu/1/edit?js,output)
+#### 犯错导致BUG了半天才修复 
+* **这里我犯了2个错误导致BUG了半天**
+1. for in循环的时候，因为this.template是保持不变的，所以需要传给一个变量才可以，不然每次开始的时候都是没有替换过的。
+2. for in循环的时候，这里的data.key就是等于data.['key']的写法，这里的key是一个变量，不是一个字符串，写成字符串就得不到要的结果了
+
 ### 小结
 * new构造函数主要做了下面的事情
 1. 创建一个临时对象，并用this指向这个临时对象

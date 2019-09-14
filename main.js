@@ -46,8 +46,13 @@ function View(options){
 View.prototype.render=function(data){
   //render意思就是初始化渲染页面的DOM，将template里面的节点解析成DOM
    //这里也可以写成render:function(data){}接受一个字符串渲染到#app里面去
-  let html = this.template.replace('__number__', data.number)
-    .replace('__name__', data.name) //因为有占位符需要替换
+  // let html = this.template.replace('__number__', data.number)
+    // .replace('__name__', data.name) //因为有占位符需要替换
+    let html=this.template
+    for (let key in data){
+      html=html.replace(`__${key}__`,data[key])//因为this.template是保持不变的，所以需要传给一个变量才可以，不然每次开始的时候都是没有替换过的
+      //这里的data.key就是等于data.['key']的写法，这里的key是一个变量，不是一个字符串，写成字符串就得不到要的结果
+    }
   $(this.el).html(html)
 }
 
