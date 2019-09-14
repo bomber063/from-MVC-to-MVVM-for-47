@@ -45,58 +45,75 @@ let view={
   }
 }
 
-// axios.get('./book/1')//这个请求是首次进入之后的替换代码
-model.fetch(1)
-  .then(({ data }) => {//这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
-    //   data=JSON.parse(data)
-    // let originalHtml = $('#app').html()//获取老的html
-    // let newHtml = originalHtml.replace('__name__', data.name)
-    //   .replace('__number__', data.number)//修改占位符
-    // $('#app').html(newHtml)//这一步是设置新的html
-    view.render(model.data)//这里其实就是response.data
-  })
+let controller = {
+  init(options) {
+      let {
+        view, model
+      } = options
+      this.view = view
+      this.model = model
+      this.model.fetch(1)
+        .then(() => { //这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
+          //   data=JSON.parse(data)
+          //   let data=response.data
+          //   console.log(data)
+          //   let originalHtml=$('#app').html()//获取老的html
+          //   let newHtml=originalHtml.replace('__name__',data.name)
+          //     .replace('__number__',data.number)//修改占位符
+          //   $('#app').html(newHtml)//这一步是设置新的html
+          this.view.render(this.model.data) //这里其实就是response.data
+        })
+      this.bindEvents(view,model)//这个需要把view和model传进来
+    },
+    bindEvents(view,model) {
+      //下面的代码是点击加1或者减一或者归零后的代码
+      //下面的都是绑定事件，所以this会被改变，所以上面需要把view和model传进来
+      $(view.el).on('click', '#addOne', function() {
+        var oldNumber = $('#number').text() //他是一个字符串string
+        var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
+        model.updata({
+            number: newNumber
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+            //     response.number=newNumber
+            view.render(model.data) //这里其实就是response.data
+              //       $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+          })
+      }),
+      $(view.el).on('click', '#minusOne', function() {
+        var oldNumber = $('#number').text() //他是一个字符串string
+        var newNumber = oldNumber - 0 - 1 //减0是为了把字符串转换为数字
+          //   $('#number').text(newNumber)
+        model.updata({
+            number: newNumber
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+            //     response.number=newNumber
+           view.render(model.data) //这里其实就是response.data
+              //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+          })
+      }),
+      $(view.el).on('click', '#reset', function() {
+        //   $('#number').text(0)
+        model.updata({
+            number: 0
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+            //     response.number=0
+            view.render(model.data) //这里其实就是response.data
+              //        $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
+              //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
+          })
+      })
+    }
+}
 
-//下面的代码是点击加1或者减一或者归零后的代码
-$('#app').on('click', '#addOne', function () {//在点击#app里面带的任何元素的时候如果符合#addOne这个选择器就会执行下面的代码
-  var oldNumber = $('#number').text()//他是一个字符串string
-  var newNumber = oldNumber - 0 + 1//减0是为了把字符串转换为数字
-  // $('#number').text(newNumber)
-  // axios.put('./book/1', { number: newNumber })//前端请求传入的数据{number:newNumber}
-  model.updata({number:newNumber},1)
-    .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
-      //     response.number=newNumber
-      // $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-      view.render(model.data)//这里其实就是response.data
-     //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-    })
+controller.init({
+  view: view,
+  model: model
 })
-
-$('#app').on('click', '#minusOne', function () {
-  var oldNumber = $('#number').text()//他是一个字符串string
-  var newNumber = oldNumber - 0 - 1//减0是为了把字符串转换为数字
-  // $('#number').text(newNumber)
-  // axios.put('./book/1', { number: newNumber })//前端请求传入的数据{number:newNumber}
-  model.updata({number:newNumber},1)
-    .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
-      //     response.number=newNumber
-      // $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-      view.render(model.data)//这里其实就是response.data
-     //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-    })
-})
-
-$('#app').on('click', '#reset', function () {
-  // $('#number').text(0)
-  // axios.put('./book/1', { number: 0 })//前端请求传入的数据{number:0}
-  model.updata({number:0},1)
-    .then((response) => {//这里的response如果下面要用这里必须传进来作为参数
-      //     response.number=0
-      // $('#number').text(response.data.number)//response.data.number是后端（也就是数据库中）返回的数据的数量
-      view.render(model.data)//这里其实就是response.data
-     //这里用$('#number').text(model.data.number)也是可以的，因为前面已经赋值了
-    })
-})
-
 
 function fakeData() {
   let book = {

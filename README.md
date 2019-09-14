@@ -443,11 +443,74 @@ let view={
 3. 这样就可以把替换占位符的操作放到view里面实现了。
 * 目前为止的[JSBIN链接](https://jsbin.com/jatehuneqi/1/edit?js,output)
 #### 最后一个也就是逻辑控制controller(主要是JS来实现控制view和model)
-* 
-
+* controller
+```
+let controller = {
+  init(options) {
+    },
+  bindEvents(view,model) {
+  }
+```
+* controller里面的init函数
+```
+  init(options) {
+      let {
+        view, model
+      } = options
+      this.view = view
+      this.model = model
+      this.model.fetch(1)
+        .then(() => { //这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
+          this.view.render(this.model.data) //这里其实就是response.data
+        })
+      this.bindEvents(view,model)//这个需要把view和model传进来
+    },
+```
+* controller里面绑定事件函数bindEvents
+```
+bindEvents(view,model) {
+      //下面的都是绑定事件，所以this会被改变，所以上面需要把view和model传进来
+      $(view.el).on('click', '#addOne', function() {
+        var oldNumber = $('#number').text() //他是一个字符串string
+        var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
+        model.updata({
+            number: newNumber
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+            view.render(model.data) //这里其实就是response.data
+          })
+      }),
+      $(view.el).on('click', '#minusOne', function() {
+        var oldNumber = $('#number').text() //他是一个字符串string
+        var newNumber = oldNumber - 0 - 1 //减0是为了把字符串转换为数字
+        model.updata({
+            number: newNumber
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+           view.render(model.data) //这里其实就是response.data
+          })
+      }),
+      $(view.el).on('click', '#reset', function() {
+        model.updata({
+            number: 0
+          }, 1)
+          .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
+            view.render(model.data) //这里其实就是response.data
+          })
+      })
+    }
+```
+* 最后调用controller里面的init函数
+```
+controller.init({
+  view: view,
+  model: model
+})
+```
 * 注意的地方
 1. controller是来控制view和model的。所以要把view和model传进来。
-* 目前为止的[jsbin链接](https://jsbin.com/buqelanaki/1/edit?js,output)
+2. 绑定事件也需要传进来，因为绑定事件会改变this，所以this需要bind(this)，或者用箭头函数，或者直接把view和model传进里面去，比如bindEvents(view,model)
+* 目前为止的[jsbin链接](https://jsbin.com/dodoyosiva/edit?js,output)
 
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
