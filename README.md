@@ -801,6 +801,9 @@ let view=new Vue({
 ```
 
 * 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
+#### Vue不会整个刷新页面，只会局部修改需要修改的地方
+* 如果使用了Vue，可以对比下这个[JSbin链接](https://jsbin.com/hekolalefu/1/edit?js,output)，里面有一个延迟函数会使number变成10,这里只是局部渲染。虽然这里的view是控制整个#app这个子节点，但是更新的只有这个number为10的局部变化。也就是template里面的{{book.number}}。
+* 但是如果没有使用Vue，对比前面的[Jsbin链接](https://jsbin.com/wevaginodu/1/edit?js,output),点击加1或者减1或者归零会导致整个#app这个子节点都改变了。因为这里的view是控制整个#app这个子节点。
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
