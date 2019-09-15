@@ -62,15 +62,17 @@ let view=new Vue({
   el: '#app', //某个元素
   //元素里面的内容
   data:{
-    name: '未命名',
-    number: 0,
-    id: ''
+    book:{
+      name: '未命名',
+      number: 0,
+      id: ''
+    }
   },
   template: `
   <div>
     <div>
-    书名:《{{name}}》
-    数量:<span id='number'>{{number}}</span>
+    书名:《{{book.name}}》
+    数量:<span id='number'>{{book.number}}</span>
     </div>
     <div>
       <button id='addOne'>加1</button>
@@ -98,9 +100,10 @@ let controller = {
         //     .replace('__number__',data.number)//修改占位符
         //   $('#app').html(newHtml)//这一步是设置新的html
         // this.view.render(this.model.data) //这里其实就是response.data
-        this.view.name=this.model.data.name
-        this.view.number=this.model.data.number
-        this.view.id=this.model.data.id
+        // this.view.name=this.model.data.name
+        // this.view.number=this.model.data.number
+        // this.view.id=this.model.data.id
+        this.view.book=this.model.data
       })
     this.bindEvents()
   },

@@ -776,6 +776,29 @@ let view=new Vue({
 > * MVC上是view.render(model.data)，你把model上的数据（data）给view，然后用render函数去更新HTML就好了
 > * 而使用Vue之后，就不用去管render了，也就是不用去考虑怎么初始化页面了，只需要更新view的data,也就是view.data，然后这个view.data会自动更新HTML
 > * 也就是把MVC的render函数变成了Vue之后的简单赋值操作。
+#### 把三个赋值变成一个赋值
+* 只需要用一个对象把这些数据都包裹起来，然后来取这个新的对象即可，代码修改为,但是对应的{{}},也就是双大括号里面的取值也需要对应修改。
+* Vue里面data修改为
+```
+  data:{
+    book:{
+    name: '未命名',
+    number: 0,
+    id: ''
+   }
+  },
+```
+* Vue里面的双大括号修改为
+```
+    <div>
+    书名:《{{book.name}}》
+    数量:<span id='number'>{{book.number}}</span>
+    </div>
+```
+* 最后的赋值由前面的三行变成了一行
+```
+        this.view.book=this.model.data
+```
 
 * 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 ## 其他
