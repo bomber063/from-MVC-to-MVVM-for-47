@@ -97,7 +97,10 @@ let controller = {
         //   let newHtml=originalHtml.replace('__name__',data.name)
         //     .replace('__number__',data.number)//修改占位符
         //   $('#app').html(newHtml)//这一步是设置新的html
-        this.view.render(this.model.data) //这里其实就是response.data
+        // this.view.render(this.model.data) //这里其实就是response.data
+        this.view.name=this.model.data.name
+        this.view.number=this.model.data.number
+        this.view.id=this.model.data.id
       })
     this.bindEvents()
   },

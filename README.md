@@ -712,9 +712,11 @@ View.prototype.render=function(data){
   $(this.el).html(html)
 }
 ```
-* 然后把new View变成new Vue,然后__name__要变成{{name}}(它的标记需要用到两个大括号)，这个标记每个库可以指定，并也可以随机配置。
-* 并且它强制要求把数据。比如data传给Vue,不要传给Model，因为Vue需要这个data（数据）初始化这个template,这里的render也不需要了。
-* template必须只有一个根元素，如果有两个根元素，Vue只会看**第一个根元素**，后面的不会在看了。**如果有多个根元素，就在最外面在套一个div就可以啦**
+#### Vue的一些特点
+* 前三个特点
+1. 然后把new View变成new Vue,然后__name__要变成{{name}}(它的标记需要用到两个大括号)，这个标记每个库可以指定，并也可以随机配置。
+2. 并且它强制要求把数据。比如data传给Vue,不要传给Model，因为Vue需要这个data（数据）初始化这个template,这里的render也不需要了。
+3. template必须只有一个根元素，如果有两个根元素，Vue只会看**第一个根元素**，后面的不会在看了。**如果有多个根元素，就在最外面在套一个div就可以啦**
 * View的代码原来是
 ```
 let view=new View({  
@@ -757,7 +759,23 @@ let view=new Vue({
 `
 })
 ```
-* 没有render
+#### Vue没有render的特点
+* 没有render，说明**不需要手动第一次初始化页面了**。那么如果**再次获取页面或者更新**渲染初始化页面呢？直接用this.view就好了，因为Vue可以根据data（数据）自动变化，自动初始化，自动渲染页面，至于怎么做到这个render的暂时先不说明，目前只是明白怎么从传统的MVC变成Vue的MVVM，**但是需要注意一点就是，它会把data里面的所有属性升级到view上面来更改，也就是说如果是this.view.data.name应该直接写成this.view.name**
+* 简单的理解就是只要你去修改data里面的name,id,number,那么HTML会自动更新。不用去render初始化或者渲染页面了。
+* 比如代码应该修改为
+```
+      this.model.fetch(1)
+        .then(() => { //这里的{data}就是let data=response.data，这里没有传入response，所以不能使用response
+//           this.view.render(this.model.data) //render的第一次初始化页面可以删除
+        this.view.name=this.model.data.name
+        this.view.number=this.model.data.number
+        this.view.id=this.model.data.id
+        })
+```
+* 如果我们需要需要View，也就是更新页面。上面的变化就是：
+> MVC上是view.render(model.data)，你把model上的数据（data）给view，然后用render函数去更新HTML就好了
+> 而使用Vue之后，就不用去管render了，也就是不用去考虑怎么初始化页面了，只需要更新view的data,也就是view.data，然后这个view.data会自动更新HTML
+> 也就是把MVC的render函数变成了Vue之后的简单赋值操作。
 * 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
