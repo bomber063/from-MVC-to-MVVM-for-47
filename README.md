@@ -773,9 +773,10 @@ let view=new Vue({
         })
 ```
 * 如果我们需要需要View，也就是更新页面。上面的变化就是：
-> MVC上是view.render(model.data)，你把model上的数据（data）给view，然后用render函数去更新HTML就好了
-> 而使用Vue之后，就不用去管render了，也就是不用去考虑怎么初始化页面了，只需要更新view的data,也就是view.data，然后这个view.data会自动更新HTML
-> 也就是把MVC的render函数变成了Vue之后的简单赋值操作。
+> * MVC上是view.render(model.data)，你把model上的数据（data）给view，然后用render函数去更新HTML就好了
+> * 而使用Vue之后，就不用去管render了，也就是不用去考虑怎么初始化页面了，只需要更新view的data,也就是view.data，然后这个view.data会自动更新HTML
+> * 也就是把MVC的render函数变成了Vue之后的简单赋值操作。
+
 * 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
