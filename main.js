@@ -23,18 +23,6 @@ Model.prototype.updata=function(data, id) { //在原型上面更新数据
     })
 }
 
-let model=new Model({//这里创建了new，也就是做了四步。1.创建一个临时对象，并用this指向这个临时对象
-//2.把this绑定了实例对象model
-//3.this的共有属性叫做prototype  
-//4.return这个this
-data: {
-  name: '',
-  number: 0,
-  id: ''
-},
-resource:'book'
-})//这样我们每次声明一个model代码就简化为只需要两个属性，一个data，一个resource
-
 function View(options){
   this.el=options.el
   this.template=options.template
@@ -55,20 +43,42 @@ View.prototype.render=function(data){
     }
   $(this.el).html(html)
 }
+//上面是MVC的类，下面是对象，对象是从类里面派生出来的。
 
-let view=new View({  
-el: '#app', //某个元素
-//元素里面的内容
-template: `
+let model=new Model({//这里创建了new，也就是做了四步。1.创建一个临时对象，并用this指向这个临时对象
+//2.把this绑定了实例对象model
+//3.this的共有属性叫做prototype  
+//4.return这个this
+data: {
+  name: '',
+  number: 0,
+  id: ''
+},
+resource:'book'
+})//这样我们每次声明一个model代码就简化为只需要两个属性，一个data，一个resource
+
+let view=new Vue({  
+
+  el: '#app', //某个元素
+  //元素里面的内容
+  data:{
+    name: '未命名',
+    number: 0,
+    id: ''
+  },
+  template: `
   <div>
-  书名：《__name__》
-  数量：<span id='number'>__number__</span>
-  </div>
+    <div>
+    书名:《{{name}}》
+    数量:<span id='number'>{{number}}</span>
+    </div>
+    <div>
+      <button id='addOne'>加1</button>
+      <button id='minusOne'>减1</button>
+      <button id='reset'>归零</button>
+    </div>
   <div>
-    <button id='addOne'>加1</button>
-    <button id='minusOne'>减1</button>
-    <button id='reset'>归零</button>
-  </div>`
+`
 })
 
 let controller = {

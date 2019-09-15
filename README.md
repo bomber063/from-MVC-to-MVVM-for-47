@@ -693,7 +693,72 @@ View.prototype.render=function(data){
 2. 把this绑定了实例对象model
 3. this的共有属性叫做prototype  
 4. return这个this
+## Vue的引入
+* 在[bootcdn]搜索Vue就可以找到啦。我们使用vue.min.js，因为这个比较小。
+* 然后把它放到script标签里面就好了。
+### 接下来把MVC变成MVVM的Vue
+* 首先是可以删除掉View的类部分，也就是view的原型及构造函数部分，也就是这部分可以删除
+```
+function View(options){
+  this.el=options.el
+  this.template=options.template
+}
 
+View.prototype.render=function(data){
+    let html=this.template
+    for (let key in data){
+      html=html.replace(`__${key}__`,data[key])
+    }
+  $(this.el).html(html)
+}
+```
+* 然后把new View变成new Vue,然后__name__要变成{{name}}(它的标记需要用到两个大括号)，这个标记每个库可以指定，并也可以随机配置。
+* 并且它强制要求把数据。比如data传给Vue,不要传给Model，因为Vue需要这个data（数据）初始化这个template,这里的render也不需要了。
+* template必须只有一个根元素，如果有两个根元素，Vue只会看**第一个根元素**，后面的不会在看了。**如果有多个根元素，就在最外面在套一个div就可以啦**
+* View的代码原来是
+```
+let view=new View({  
+el: '#app', //某个元素
+//元素里面的内容
+template: `
+  <div>
+  书名：《__name__》
+  数量：<span id='number'>__number__</span>
+  </div>
+  <div>
+    <button id='addOne'>加1</button>
+    <button id='minusOne'>减1</button>
+    <button id='reset'>归零</button>
+  </div>`
+})
+```
+* 更改为Vue之后就变成
+```
+let view=new Vue({  
+
+  el: '#app', //某个元素
+  data:{
+    name: '未命名',
+    number: 0,
+    id: ''
+  },
+  template: `
+  <div>
+    <div>
+    书名:《{{name}}》
+    数量:<span id='number'>{{number}}</span>
+    </div>
+    <div>
+      <button id='addOne'>加1</button>
+      <button id='minusOne'>减1</button>
+      <button id='reset'>归零</button>
+    </div>
+  <div>
+`
+})
+```
+* 没有render
+* 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
