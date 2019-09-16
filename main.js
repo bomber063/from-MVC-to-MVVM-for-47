@@ -66,7 +66,8 @@ let view=new Vue({
       name: '未命名',
       number: 0,
       id: ''
-    }
+    },
+    n:1
   },
   template: `
   <div>
@@ -75,8 +76,14 @@ let view=new Vue({
     数量:<span id='number'>{{book.number}}</span>
     </div>
     <div>
-      <button v-on:click='addOne'>加1</button>
-      <button v-on:click='minusOne'>减1</button>
+     <input v-model='n'>
+     <span>
+       N的值是{{n}}
+     </span>
+    </div>
+    <div>
+      <button v-on:click='addOne'>加N</button>
+      <button v-on:click='minusOne'>减N</button>
       <button v-on:click='reset'>归零</button>
     </div>
   <div>
@@ -92,7 +99,7 @@ methods:{
     // var oldNumber = $('#number').text() //他是一个字符串string
     // var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
     model.updata({
-      number: this.book.number+1
+      number: this.book.number+(this.n-0)
     }, 1)
       .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
         //     response.number=newNumber
@@ -107,7 +114,7 @@ methods:{
     // var newNumber = oldNumber - 0 - 1 //减0是为了把字符串转换为数字
     //   $('#number').text(newNumber)
     model.updata({
-      number: this.book.number-1
+      number: this.book.number-(this.n-0)
     }, 1)
       .then((response) => { //这里的response如果下面要用这里必须传进来作为参数
         //     response.number=newNumber

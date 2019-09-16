@@ -876,7 +876,72 @@ let view=new Vue({
    3. 基本上都是在做**赋值（有新的数据就赋值给this.book）和取值（直接用this.book.number）这两件事**。 
 * vue的好处就是让以前的MVC更加智能，节省了很多不需要写的东西(比如操作DOM，render和controller等，controller合并到Vue里面去了)，因为Vue已经帮我们实现了，
 * 目前为止的[Jsbin链接](https://jsbin.com/lunovogeji/1/edit?js,output)
-
+#### 把加1减1变成加n减n
+* 用到[v-model](https://cn.vuejs.org/v2/api/#v-model)
+* 预期：随表单控件类型不同而不同。
+* 限制：
+```
+<input>
+<select>
+<textarea>
+components
+```
+* 用法：在表单控件或者组件上**创建双向绑定**。细节请看下面的教程链接——[表单控件绑定](https://cn.vuejs.org/v2/guide/forms.html)
+* **你可以用 v-model 指令在表单 <input>、<textarea> 及 <select> 元素上创建双向数据绑定**。它会根据控件类型自动选取正确的方法来更新元素。尽管有些神奇，但 v-model 本质上不过是语法糖。它负责监听用户的输入事件以更新数据，并对一些极端场景进行一些特殊处理。
+> v-model 会忽略所有表单元素的 value、checked、selected 特性的初始值而总是将 **Vue 实例的数据作为数据来源**。你应该通过 JavaScript 在组件的 data 选项中声明初始值。
+* v-model 在内部为不同的**输入元素使用不同的属性并抛出不同的事件**：
+1. text 和 textarea 元素使用 value 属性和 input 事件；
+2. checkbox 和 radio 使用 checked 属性和 change 事件；
+3. select 字段将 value 作为 prop 并将 change 作为事件。
+> 对于需要使用输入法 (如中文、日文、韩文等) 的语言，你会发现 v-model 不会在输入法组合文字过程中得到更新。如果你也想处理这个过程，请使用 input 事件。
+* 在data里面创建一个数据n:1，然后用v-model双向绑定这个n
+```
+    <div>
+      <input v-model='n'>
+    </div>
+```
+* input 里面的获取到n:1的初始值value是一个字符串，需要转换为数字，加1后修改为下面代码
+```
+              number:this.book.number+(this.n-0)//-0是为了字符串转换为数字
+```
+* 双向绑定，既绑定了span里面的{{n}}，有绑定了input里面的v-model:'n'
+```
+    <div>
+      <input v-model='n'>
+    <span>N的值是{{n}}</span>
+    </div>
+```
+#### 双向绑定和单向绑定
+* 计算机编程的时候分两个部分，一个部分是内存，存储了数据，比如
+```
+  data:{
+    book:{
+      name: '未命名',
+      number: 2,
+      id: ''
+    }
+  },
+```
+* 与数据（内存）对应的就是另一个部分，页面上的一个2,这里只说number这个数据
+```
+    <span>2</span>
+```
+* 单向——当我们写book.number=3的时候，实际上我们只修改了数据(内存)，这时候Vue负责根据这个number的值去局部的更新这个span。这个就是单向。
+* 双向——只有部分标签才可以实现双向，比如<input>、<select>、<textarea>、components等，具体见[v-model](https://cn.vuejs.org/v2/api/#v-model),因为这些标签**用户可以更改数据，可以输入数据**，比如
+```
+<input value=1>
+```
+* data里面的number就是1，那么这个input的初始值就是1，这个是**Vue负责的渲染过程,也就是从内存到页面的过程**，但是当用户把这个1变成了5的时候，**Vue还需要负责把这个5弄到data的数据number里面去,也就是从用户面对的页面到内存的过程**
+##### 双向绑定
+* 这时候当你在input输入框把初始化的 v-model=1，改成了5的时候，会导致span元素里面的n也同时发生变化（这里是因为span里面用到了{{n}}，其实主要是改变了这个n），也就是既绑定了input又绑定的span标签。
+* 双向：
+1. **数据（内存）到用户页面这个render过程**——刚开始用户没有更改input里面的值的时候，data里面的number就是1，那么这个input的初始值就是1，这个是**Vue负责的渲染过程,也就是从内存到页面的过程**。
+2. **用户页面到数据（内存）的过程**——当用户把这个数据1变成了数据5的时候，**Vue还需要负责把这个5弄到data的数据number里面去,也就是从用户面对的页面到内存的过程**。接下来**又是上面步骤1的数据到用户页面的过程**，数据（内存）更新后导致span里面的n(**主要是这个n是data里面的n**)也更新，这个更新的数据（内存）又传递给页面，更新了页面
+* 可以看到这**一来一去就是双向绑定**
+##### 单向绑定
+* 之前的渲染并没有用户的输入数据（内存），只需要渲染出来就行了，渲染这个过程就是上面的1的过程，也就是从**数据（内存）到用户页面**的过程，这是一个**单向绑定**
+* 所以可以看到Vue是一个自动化的MVC，因为他是自动化的，所以也叫作MVVM。
+* 目前为止的[Jsbin链接](https://jsbin.com/dexusexuma/1/edit?js,output)
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
