@@ -887,7 +887,7 @@ let view=new Vue({
 components
 ```
 * 用法：在表单控件或者组件上**创建双向绑定**。细节请看下面的教程链接——[表单控件绑定](https://cn.vuejs.org/v2/guide/forms.html)
-* **你可以用 v-model 指令在表单 <input>、<textarea> 及 <select> 元素上创建双向数据绑定**。它会根据控件类型自动选取正确的方法来更新元素。尽管有些神奇，但 v-model 本质上不过是语法糖。它负责监听用户的输入事件以更新数据，并对一些极端场景进行一些特殊处理。
+* 你可以用 v-model 指令在表单 input、textarea 及 select 元素上创建双向数据绑定。它会根据控件类型自动选取正确的方法来更新元素。尽管有些神奇，但 v-model 本质上不过是语法糖。它负责监听用户的输入事件以更新数据，并对一些极端场景进行一些特殊处理。
   > v-model 会忽略所有表单元素的 value、checked、selected 特性的初始值而总是将 **Vue 实例的数据作为数据来源**。你应该通过 JavaScript 在组件的 data 选项中声明初始值。
 * v-model 在内部为不同的**输入元素使用不同的属性并抛出不同的事件**：
 1. text 和 textarea 元素使用 value 属性和 input 事件；
