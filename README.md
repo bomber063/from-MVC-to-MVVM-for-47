@@ -942,6 +942,20 @@ components
 * 之前的渲染并没有用户的输入数据（内存），只需要渲染出来就行了，渲染这个过程就是上面的1的过程，也就是从**数据（内存）到用户页面**的过程，这是一个**单向绑定**
 * 所以可以看到Vue是一个自动化的MVC，因为他是自动化的，所以也叫作MVVM。
 * 目前为止的[Jsbin链接](https://jsbin.com/dexusexuma/1/edit?js,output)
+## 使用Vue做三个小功能
+* 通过Vue我们发现，已经不需要绑定事件，也不需要render（渲染页面），需要做的事情就是取值和赋值。用了Vue永远思考的是数据内存而不是DOM。
+* 因为有了Vue就不需要获取元素等DOM操作，所以不需要它了。并且axios把jQuery的AJAX的功能代替了，所以jQuery库可以不使用了。
+### 点击按钮出现某个显示效果，再次点击就消失
+* 这里用到一个新的的Vue的API——[v-if](https://cn.vuejs.org/v2/api/#v-if)
+* 代码
+```
+  <div v-if='open'>你好</div>
+```
+* 当open时ture的时候就显示这个你好在页面上，如果是false就隐藏。
+* 用法：
+> 根据表达式的值的真假条件渲染元素。在切换时元素及它的数据绑定 / 组件被销毁并重建。如果元素是 <template> ，将提出它的内容作为条件块。
+> 当条件变化时该指令触发过渡效果。
+* 完成后的具体代码见[JSbin链接](https://jsbin.com/qaqepogodi/1/edit?html,js,output)
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
