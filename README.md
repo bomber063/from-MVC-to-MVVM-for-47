@@ -867,6 +867,7 @@ let view=new Vue({
 * 目前的大致流程就是
 1. 一旦创建了组件就会执行created(){}函数里面的内容，就是请求第一本书的自动初始化赋值this.book=model.data，name,id,number都会变成新的。**页面自动更新，不需要管render这件事**
 2. 然后点击加1的过程就是 
+
  1. 因为vue已经给加1这个button绑定了addOne,所以当你点击加1就会调用addOne
  ```
        <button v-on:click='addOne'>加1</button>
