@@ -927,7 +927,7 @@ components
     <span>2</span>
 ```
 * 单向——当我们写book.number=3的时候，实际上我们只修改了数据(内存)，这时候Vue负责根据这个number的值去局部的更新这个span。这个就是单向。
-* 双向——只有部分标签才可以实现双向，比如<input>、<select>、<textarea>、components等，具体见[v-model](https://cn.vuejs.org/v2/api/#v-model),因为这些标签**用户可以更改数据，可以输入数据**，比如
+* 双向——只有部分标签才可以实现双向，比如标签input、select、textarea。组件components(这个是组件，不是标签)等，具体见[v-model](https://cn.vuejs.org/v2/api/#v-model),因为这些标签**用户可以更改数据，可以输入数据**，比如
 ```
 <input value=1>
 ```
