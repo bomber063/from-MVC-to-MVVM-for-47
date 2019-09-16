@@ -953,9 +953,8 @@ components
 ```
 * 当open时ture的时候就显示这个你好在页面上，如果是false就隐藏。
 * 用法：
-   > 根据表达式的值的真假条件渲染元素。在切换时元素及它的数据绑定 / 组件被销毁并重建。如果元素是 <template> ，将提出它的内容作为条件块。
-   > 当条件变化时该指令触发过渡效果。  
-
+> 根据表达式的值的真假条件渲染元素。在切换时元素及它的数据绑定 / 组件被销毁并重建。如果元素是 template ，将提出它的内容作为条件块。
+> 当条件变化时该指令触发过渡效果。  
 * 完成后的具体代码见[JSbin链接](https://jsbin.com/qaqepogodi/1/edit?html,js,output)
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
