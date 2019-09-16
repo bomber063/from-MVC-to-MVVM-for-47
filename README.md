@@ -776,6 +776,7 @@ let view=new Vue({
 > * MVC上是view.render(model.data)，你把model上的数据（data）给view，然后用render函数去更新HTML就好了
 > * 而使用Vue之后，就不用去管render了，也就是不用去考虑怎么初始化页面了，只需要更新view的data,也就是view.data，然后这个view.data会自动更新HTML
 > * 也就是把MVC的render函数变成了Vue之后的简单赋值操作。
+* 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 #### 把三个赋值变成一个赋值
 * 只需要用一个对象把这些数据都包裹起来，然后来取这个新的对象即可，代码修改为,但是对应的{{}},也就是双大括号里面的取值也需要对应修改。
 * Vue里面data修改为
@@ -799,11 +800,81 @@ let view=new Vue({
 ```
         this.view.book=this.model.data
 ```
-
-* 所以我们看下就知道，Vue就是MVC做了一下升级。搞清楚MVC的前提再去学Vue就相对简单很多。
 #### Vue不会整个刷新页面，只会局部修改需要修改的地方
 * 如果使用了Vue，可以对比下这个[JSbin链接](https://jsbin.com/hekolalefu/1/edit?js,output)，里面有一个延迟函数会使number变成10,这里只是局部渲染。虽然这里的view是控制整个#app这个子节点，但是更新的只有这个number为10的局部变化。也就是template里面的{{book.number}}。
+```
+          setTimeout(()=>{
+            this.view.book.number=10
+          },5000)
+```
 * 但是如果没有使用Vue，对比前面的[Jsbin链接](https://jsbin.com/wevaginodu/1/edit?js,output),点击加1或者减1或者归零会导致整个#app这个子节点都改变了。因为这里的view是控制整个#app这个子节点。
+#### Vue还可以更厉害更多功能，可以把controller都省掉
+* controller最重要的一件事就是绑定事件——bindEvents，省去controller的bindEvents之后**代替的是在Vue上面写上methods**。
+* 这个三个点击事件
+```
+  bindEvents() {
+    $(this.view.el).on('click', '#addOne', this.addOne.bind(this)),
+    $(this.view.el).on('click', '#minusOne', this.minusOne.bind(this)),
+    $(this.view.el).on('click', '#reset', this.reset.bind(this))
+  }
+```
+* Vue里面的template的html的三个元素的id
+```
+    <div>
+      <button id='addOne'>加1</button>
+      <button id='minusOne'>减1</button>
+      <button id='reset'>归零</button>
+    </div>
+```
+* 上面的三个点击事件和三个元素的id由这个代替
+```
+      <button v-on:click='addOne'>加1</button>
+      <button v-on:click='minusOne'>减1</button>
+      <button v-on:click='reset'>归零</button>
+```
+* 还需要第一步初始化[created()](https://cn.vuejs.org/v2/api/#created),在实例创建完成后被立即调用。在这一步，实例已完成以下的配置：数据观测 (data observer)，属性和方法的运算，watch/event 事件回调。然而，挂载阶段还没开始，$el 属性目前不可见。**简单的说就是组件创建成功之后的操作**
+```
+  created(){
+    model.fetch(1)
+    .then(()=>{
+      this.book=model.data
+    })
+  }
+```
+* Vue里面的所有this.model，都修改为model，因为这里的model是一个变量，而不是由controller传进来的this下面的属性。
+* number的操作也不需要DOM来操作，只需要修改data里面的数据即可，比如原来是
+```
+         var oldNumber = $('#number').text() //他是一个字符串string
+         var newNumber = oldNumber - 0 + 1 //减0是为了把字符串转换为数字
+        this.model.updata({
+             number: newNumber
+          }, 1)
+```
+* 修改为
+```
+        model.updata({//这里的this删除掉了
+              number:this.book.number+1
+          }, 1)
+```
+* render函数也修改为赋值操作
+```
+             this.view.render(this.model.data) 
+```
+* 修改为
+```
+             this.book=model.data
+```
+* 目前的大致流程就是
+1. 一旦创建了组件就会执行created(){}函数里面的内容，就是请求第一本书的自动初始化赋值this.book=model.data，name,id,number都会变成新的。**页面自动更新，不需要管render这件事**
+2. 然后点击加1的过程就是 
+1. 因为vue已经给加1这个button绑定了addOne,所以当你点击加1就会调用addOne
+```
+      <button v-on:click='addOne'>加1</button>
+```
+2. addOne就是vue里面的methods里面的addOne，他会updata数据然后通过this.book.number+1,然后把这个数据复制给book，也就是this.book=model.data
+3. 基本上都是在做**赋值（有新的数据就赋值给this.book）和取值（直接用this.book.number）这两件事**。 
+* vue的好处就是让以前的MVC更加智能，节省了很多不需要写的东西(比如操作DOM，render和controller等，controller合并到Vue里面去了)，因为Vue已经帮我们实现了，
+
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
