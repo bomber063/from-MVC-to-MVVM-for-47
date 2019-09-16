@@ -868,12 +868,12 @@ let view=new Vue({
 1. 一旦创建了组件就会执行created(){}函数里面的内容，就是请求第一本书的自动初始化赋值this.book=model.data，name,id,number都会变成新的。**页面自动更新，不需要管render这件事**
 2. 然后点击加1的过程就是 
 
- 1. 因为vue已经给加1这个button绑定了addOne,所以当你点击加1就会调用addOne
- ```
-       <button v-on:click='addOne'>加1</button>
- ```
- 2. addOne就是vue里面的methods里面的addOne，他会updata数据然后通过this.book.number+1,然后把这个数据复制给book，也就是this.book=model.data
- 3. 基本上都是在做**赋值（有新的数据就赋值给this.book）和取值（直接用this.book.number）这两件事**。 
+  1. 因为vue已经给加1这个button绑定了addOne,所以当你点击加1就会调用addOne
+  ```
+        <button v-on:click='addOne'>加1</button>
+  ```
+  2. addOne就是vue里面的methods里面的addOne，他会updata数据然后通过this.book.number+1,然后把这个数据复制给book，也就是this.book=model.data
+  3. 基本上都是在做**赋值（有新的数据就赋值给this.book）和取值（直接用this.book.number）这两件事**。 
 * vue的好处就是让以前的MVC更加智能，节省了很多不需要写的东西(比如操作DOM，render和controller等，controller合并到Vue里面去了)，因为Vue已经帮我们实现了，
 * 目前为止的[Jsbin链接](https://jsbin.com/lunovogeji/1/edit?js,output)
 
