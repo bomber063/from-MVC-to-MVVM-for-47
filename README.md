@@ -953,9 +953,23 @@ components
 ```
 * 当open时ture的时候就显示这个你好在页面上，如果是false就隐藏。
 * 用法：
-> 根据表达式的值的真假条件渲染元素。在切换时元素及它的数据绑定 / 组件被销毁并重建。如果元素是 template ，将提出它的内容作为条件块。  
-> 当条件变化时该指令触发过渡效果。  
+> * 根据表达式的值的真假条件渲染元素。在切换时元素及它的数据绑定 / 组件被销毁并重建。如果元素是 template ，将提出它的内容作为条件块。  
+> * 当条件变化时该指令触发过渡效果。  
 * 完成后的具体代码见[JSbin链接](https://jsbin.com/qaqepogodi/1/edit?html,js,output)
+### 用Vue做一个有缝轮播样式
+* 用到新的API，就是[v-bind](https://cn.vuejs.org/v2/api/#v-bind),比如
+```
+    <div id='slide' v-bind:style="{ margin: this.size + 'px'}"></div>
+```
+* 这里的v-bind，如果后面是style，还可以省略掉，比如
+```
+    <div id='slide' :style="{ margin: this.size + 'px'}"></div>
+```
+* 这里的一般思路就是通过methods来修改data里面的数据，然后把这个修改的数据放到v-bind里面去。
+* 具体的代码见[jsbin链接](https://jsbin.com/boqivahosa/1/edit?css,js,output)
+* 这里Vue帮我们减少了很多工作，这是Vue这个框架厉害的地方，并不是自己厉害。用原生的JS写才能显示自己厉害，如果想学东西，一般都是先学原生JS，明白原理之后之后再学习和使用别人的框架。
+### 如果Vue出现问题一般不用控制台调试，而是要用HTML调试，也就是在HTML增加标签或者文字
+* 比如{{具体内容}}放到template里面
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
 
