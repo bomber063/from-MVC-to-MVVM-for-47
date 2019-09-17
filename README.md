@@ -968,6 +968,53 @@ components
 * 这里的一般思路就是通过methods来修改data里面的数据，然后把这个修改的数据放到v-bind里面去。
 * 具体的代码见[jsbin链接](https://jsbin.com/boqivahosa/1/edit?css,js,output)
 * 这里Vue帮我们减少了很多工作，这是Vue这个框架厉害的地方，并不是自己厉害。用原生的JS写才能显示自己厉害，如果想学东西，一般都是先学原生JS，明白原理之后之后再学习和使用别人的框架。
+### 做一个Tab切换
+* 这里用到一个新的API——[v-show](https://cn.vuejs.org/v2/api/#v-show)和[v-show的详细说明](https://cn.vuejs.org/v2/guide/conditional.html#v-show)
+* v-show
+> 不同的是带有 v-show 的元素始终会被渲染并保留在 DOM 中。v-show 只是简单地切换元素的 CSS 属性 display。
+> 注意，v-show 不支持 template 元素，也不支持 v-else。
+#### v-if vs v-show
+* v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+* v-if 也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+* 相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
+* 一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
+* v-show可以写成这样
+```
+      <li v-show='select===1'>1</li>
+```
+* click不仅后面可以接函数，还可以直接接JS代码，比如
+```
+      <li v-on:click='select=1'>1</li>
+```
+* 这样就可以实现点击数字几就展示数字几的效果
+* [JSbin代码链接](https://jsbin.com/racicecovi/1/edit?css,js,output)
+##### 可以继续增加CSS样式(用到v-for)
+* v-bind还可以直接与class绑定在一起，具体见[链接Class 与 Style 绑定](https://cn.vuejs.org/v2/guide/class-and-style.html),比如
+```
+      <li v-on:click='select=1'
+v-bind:class='{active:select===1}'>1</li>
+```
+* 目前的[JSbin链接](https://jsbin.com/razipovaxo/1/edit?css,js,output)
+* 继续添加[v-for](https://cn.vuejs.org/v2/api/#v-for)，
+* 基于源数据多次渲染元素或模板块。此指令之值，必须使用特定语法 alias in expression ，为当前遍历的元素提供别名：
+```
+<div v-for="item in items">
+  {{ item.text }}
+</div>
+```
+* **由于v-for在Jsbin上运行有BUG，所以就在本地来测试啦**。可以直接把jsbin下载下来就可以本地用来了。
+* 比如数据里面存入一个数组
+```
+  data: {
+    tabs:['a','b','c']
+  },
+```
+* 然后再template里面使用两个大括号{{具体内容}}获取到数据里面的具体内容，tab in tabs，前面的tab就是两个大括号里面可以取到前面数据里面的值的tabs数组里面对应的每一个key对应的value，而后面的tabs就是前面前面数据里面的tabs这个数组。
+```
+  <ol>
+      <li v-for='tab in tabs'>{{tab}}</li>
+  </ol>
+```
 ### 如果Vue出现问题一般不用控制台调试，而是要用HTML调试，也就是在HTML增加标签或者文字
 * 比如{{具体内容}}放到template里面
 ## 其他
