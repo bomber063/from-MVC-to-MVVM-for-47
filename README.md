@@ -1016,7 +1016,22 @@ v-bind:class='{active:select===1}'>1</li>
       <li v-for='tab in tabs'>{{tab}}</li>
   </ol>
 ```
-* v-bind绑定class后面必须要以一个对象，v-on绑定事件后面可以是一个JS代码，可以不是对象，也可以是对象。比如
+* v-bind绑定class后面必须要以一个对象，v-on绑定事件后面可以是一个JS代码，可以不是对象，也可以是对象。
+* 这个v-bind:class='{active:select===tab.name}'里面的{active:select===tab.name}是一个对象，它相当于之前jQuery用的[toggleClass()](https://www.jquery123.com/toggleClass/)，**本质就是通过true和false来判断是否添加这个class**
+.toggleClass()的第二个版本使用第二个参数判断样式类是否应该被添加或删除。**如果这个参数的值是true，那么这个样式类将被添加;如果这个参数的值是false，那么这个样式类将被移除。本质上是这样的**
+```
+$('#foo').toggleClass(className, addOrRemove);
+```
+* 等价于:
+```
+if (addOrRemove) {
+    $('#foo').addClass(className);
+  }
+  else {
+    $('#foo').removeClass(className);
+  }
+```
+* 代码就变成这样
 ```
   <ol>
       <li v-for='tab in tabs' 
@@ -1055,5 +1070,10 @@ data: {
 * 比如{{具体内容}}放到template里面
 ## 其他
 * 关于MVVC的博客——[什么是MVVM，MVC和MVVM的区别，MVVM框架VUE实现原理](http://baijiahao.baidu.com/s?id=1596277899370862119&wfr=spider&for=pc)
+* [前端搞那么多工具框架库，是让开发更简单，还是更复杂?](https://www.zhihu.com/question/56213172/answer/148117759)
+* Vue使用起来是比较简单，但是你不明白它的原理，前面学习了很多原生的JS和HTML和CSS就是为了给Vue来打基础的。用Vue只能代表Vue这个库厉害，不能代表自己厉害。
+* 如果Vue出BUG了，就需要知道data是干嘛用的，就需要知道一些调试的方法，如果前面的基础打好了，那么这个调试就迎刃而解了。
+* 如果做很简单的东西那么用Vue就是大材小用。理解Vue需要用到MVC的知识，一些算法知识，原生JS，ES6语法（比如ES6之前的语法是go:function(){},而ES6语法是go(){}）的一些知识。还需要一些其他库的知识比如axios库,还需要一些面向对象的知识，比如new具体做了什么等等。使用Vue的前提就是需要这些基础知识。
+* 大部分人喜欢复杂而容易的东西，比如Vue，而对其中的原理不太喜欢去学习。
 
 
