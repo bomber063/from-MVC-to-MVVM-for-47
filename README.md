@@ -988,7 +988,7 @@ components
 ```
 * 这样就可以实现点击数字几就展示数字几的效果
 * [JSbin代码链接](https://jsbin.com/racicecovi/1/edit?css,js,output)
-##### 可以继续增加CSS样式(用到v-for)
+##### 可以继续增加CSS样式(后面会用到v-for)
 * v-bind还可以直接与class绑定在一起，具体见[链接Class 与 Style 绑定](https://cn.vuejs.org/v2/guide/class-and-style.html),比如
 ```
       <li v-on:click='select=1'
@@ -1002,7 +1002,8 @@ v-bind:class='{active:select===1}'>1</li>
   {{ item.text }}
 </div>
 ```
-* **由于v-for在Jsbin上运行有BUG，所以就在本地来测试啦**。可以直接把jsbin下载下来就可以本地用来了。
+* **由于v-for在Jsbin上运行有BUG，所以就在本地来测试啦**。用v-for可以节省一些代码。
+* 可以直接把jsbin下载下来就可以本地用来了。
 * 比如数据里面存入一个数组
 ```
   data: {
@@ -1014,6 +1015,41 @@ v-bind:class='{active:select===1}'>1</li>
   <ol>
       <li v-for='tab in tabs'>{{tab}}</li>
   </ol>
+```
+* v-bind绑定class后面必须要以一个对象，v-on绑定事件后面可以是一个JS代码，可以不是对象，也可以是对象。比如
+```
+  <ol>
+      <li v-for='tab in tabs' 
+      v-on:click='select=tab.name' 
+      v-bind:class='{active:select===tab.name}'
+      >{{tab.name}}</li>
+  </ol>
+```
+* 用selected表示**选中的元素**，用tabs表示**所有元素**,然后通过v-on,v-bind,v-show就可以实现这个tab切换啦。基本上就是html的属性表示就可以实现了。
+```
+data: {
+    selected:'a',
+    tabs:[
+      {name:'a',content:'aaa'},
+      {name:'b',content:'bbb'},
+      {name:'c',content:'ccc'}
+    ]
+  },
+  template: `
+<div>
+  <ol>
+      <li v-for='tab in tabs' 
+      v-on:click='selected=tab.name' 
+      v-bind:class='{active:selected===tab.name}'
+      >{{tab.name}}</li>
+  </ol>
+  <ol>
+      <li v-for='tab in tabs' 
+      v-show='selected===tab.name'
+      >{{tab.content}}</li>
+  </ol>
+</div>
+`,
 ```
 ### 如果Vue出现问题一般不用控制台调试，而是要用HTML调试，也就是在HTML增加标签或者文字
 * 比如{{具体内容}}放到template里面

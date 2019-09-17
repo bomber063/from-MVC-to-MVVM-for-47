@@ -31,18 +31,25 @@ ol{
 let view = new Vue({
   el: '#app',
   data: {
-    select:1,
-    tabs:['a','b','c']
+    selected:'a',
+    tabs:[
+      {name:'a',content:'aaa'},
+      {name:'b',content:'bbb'},
+      {name:'c',content:'ccc'}
+    ]
   },
   template: `
 <div>
   <ol>
-      <li v-for='tab in tabs'>{{tab}}</li>
+      <li v-for='tab in tabs' 
+      v-on:click='selected=tab.name' 
+      v-bind:class='{active:selected===tab.name}'
+      >{{tab.name}}</li>
   </ol>
   <ol>
-      <li v-show='select===1'>1</li>
-      <li v-show='select===2'>2</li>
-      <li v-show='select===3'>3</li>
+      <li v-for='tab in tabs' 
+      v-show='selected===tab.name'
+      >{{tab.content}}</li>
   </ol>
 </div>
 `,
