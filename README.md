@@ -1085,11 +1085,79 @@ data: {
 2. axios.get('/xxx', {params: {id:1}} )
 3. axios({method:'get', url: '/xxx?id=1'})
 4. axios('/xxx?id=1');
-### 第三题
+#### 第三题
 * axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';的作用是什么？
 * 回答：不发送 post 请求，只是设置所有 post 请求的默认请求头，默认 Content-Type 的值为 'application/x-www-form-urlencoded'
-### 第四题
+#### 第四题
 * axios.interceptors 是做什么用的？
 * 回答：用来拦截请求和响应，可以让程序员任意篡改请求和响应
-
-
+### Vue 自测题
+#### 第一题
+* Vue 的英文官网网址是？
+* 回答：https://vuejs.org/
+#### 第二题
+* Vue 中文官网网址是？
+* 回答：https://cn.vuejs.org/index.html
+#### 第三题
+* Vue (读音 /vjuː/，类似于 view) 是一套__框架
+* 回答：用于构建用户界面的渐进式
+#### 第四题
+```
+<div id="app">
+  {{ message }}
+</div>
+```
+```
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!'
+  }
+})
+```
+* 请问脚本执行完毕后，页面上显示的文本是？
+* 回答：Hello Vue!
+#### 第五题
+```
+<div id="app-2">
+  <span _________填空______>
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+  </span>
+</div>
+```
+```
+var app2 = new Vue({
+  el: '#app-2',
+  data: {
+    message: '悬浮提示'
+  }
+})
+```
+* 如果我希望 span 的 title 是 data.message 的值，应该怎么填空？（多选）
+* 请使用 Vue 提供的 [JSFiddle](https://jsfiddle.net/chrisvfritz/50wL7mdz/) 逐个答案尝试一下（记得改完代码点击 Run）
+* 回答：
+1. v-bind:title="message"
+2. v-bind:title='message'
+3. v-bind:title="this.message"
+4. v-bind:title=message
+#### 第六题
+`<p v-if="seen">现在你看到我了</p>`
+* 回答：seen 为真值时，页面中会出现这个 p 元素
+#### 第七题
+```
+<ol>
+  <li>hi</li>
+<ol>
+```
+```
+data: {
+    tabs: [1,2,3,4,5]
+}
+```
+* 如果我想展示五个 li，应该怎么写？提示：请在 [JSFiddle](https://jsfiddle.net/chrisvfritz/50wL7mdz/) 上运行一下。
+* 回答：在 li 标签上添加 v-for="tab in tabs"
+#### 第八题
+`<input __填空___ />`
+`data: {x: 'frank'}`
+* 想让 input 的 value 与 data.x 双向绑定，应该怎么写？
+* 回答： v-model="x"
