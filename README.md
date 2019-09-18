@@ -1075,5 +1075,21 @@ data: {
 * 如果Vue出BUG了，就需要知道data是干嘛用的，就需要知道一些调试的方法，如果前面的基础打好了，那么这个调试就迎刃而解了。
 * 如果做很简单的东西那么用Vue就是大材小用。理解Vue需要用到MVC的知识，一些算法知识，原生JS，ES6语法（比如ES6之前的语法是go:function(){},而ES6语法是go(){}）的一些知识。还需要一些其他库的知识比如axios库,还需要一些面向对象的知识，比如new具体做了什么等等。使用Vue的前提就是需要这些基础知识。
 * 大部分人喜欢复杂而容易的东西，比如Vue，而对其中的原理不太喜欢去学习。
+### Axios 自测题
+#### 第一题
+* Axios 的读音是——爱克see哦斯
+#### 第二题
+* 请参考 [axois 中文文档](https://www.kancloud.cn/yunye/axios/234845)或者[git hub文档](https://github.com/axios/axios) 回答
+* 如何用 axios GET 请求 /xxx?id=1,有下面几种方法
+1. axios.get('/xxx?id=1')
+2. axios.get('/xxx', {params: {id:1}} )
+3. axios({method:'get', url: '/xxx?id=1'})
+4. axios('/xxx?id=1');
+### 第三题
+* axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';的作用是什么？
+* 回答：不发送 post 请求，只是设置所有 post 请求的默认请求头，默认 Content-Type 的值为 'application/x-www-form-urlencoded'
+### 第四题
+* axios.interceptors 是做什么用的？
+* 回答：用来拦截请求和响应，可以让程序员任意篡改请求和响应
 
 
